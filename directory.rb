@@ -16,7 +16,4 @@ puts "The Joker"
 puts "Joffrey Baratheon"
 puts "Norman Bates"
 #orint total number of students
-print "Overall we have "
-#use print() since it doesn't add new line
-print student_count
-puts " great students"
+puts "Overall we have #{student_count} great students"

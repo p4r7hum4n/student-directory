@@ -1,39 +1,5 @@
 @students = []# an empty array accessible to all methods
 
-def input_students
-  puts "Enter student name(s)"
-  puts "Hit enter twice to finish"
-  #get first name
-  name = gets.chomp
-  #while name is not empty - repeat the code
-  while !name.empty? do
-    #add student hash to array
-    @students << {name: name, cohort: :november}
-    puts "Current student count is: #{@students.count}"
-    #get another name
-    name = gets.chomp
-  end
-  @students
-end
-
-def print_header
-  puts "The students of Villains Academy"
-  puts "-------------"
-end
-
-def print
-  @students.each_with_index {
-  |name, index|
-  puts "#{index}: #{name[:name]} (#{name[:cohort]} cohort)"
-}
-end
-
-def print_footer
-  puts "Overall we have #{@students.count} great students"
-  puts "-------------"
-end
-
-
 def show_menu
   puts "1. Input the students"
   puts "2. Show the students"
@@ -42,10 +8,12 @@ def show_menu
   puts "9. Exit"
 end
 
-def show_students
-  print_header
-  print
-  print_footer
+
+def interactive_menu
+  loop do
+    show_menu
+    process(STDIN.gets.chomp) 
+  end
 end
 
 def process(selection)
@@ -65,6 +33,54 @@ def process(selection)
   end
 end
 
+def input_students
+  puts "Enter student name(s)"
+  puts "Hit enter twice to finish"
+  #get first name
+  name = STDIN.gets.chomp
+  #while name is not empty - repeat the code
+  while !name.empty? do
+    #add student hash to array
+    @students << {name: name, cohort: :november}
+    puts "Current student count is: #{@students.count}"
+    #get another name
+    name = STDIN.gets.chomp
+  end
+  @students
+end
+
+def show_students
+  print_header
+  print
+  print_footer
+end
+
+
+def print_header
+  puts "The students of Villains Academy"
+  puts "-------------"
+end
+
+def print
+  @students.each {
+  |name|
+  puts "#{name[:name]} (#{name[:cohort]} cohort)"
+}
+end
+
+def print_footer
+  puts "-------------"
+  puts "Overall we have #{@students.count} great students"
+  puts "-------------"
+end
+
+
+
+
+
+
+
+
 def save_students
   #open file for writing
   file= File.open("students.csv", "w")
@@ -78,8 +94,8 @@ def save_students
   file.close
 end
 
-def load_students
-  file = File.open("students.csv", "r")
+def load_students(filename = "students.csv")
+  file = File.open(filename, "r")
   file.readlines.each {
     |line|
     name, cohort = line.chomp.split(",")
@@ -88,14 +104,18 @@ def load_students
   file.close
 end
 
-def interactive_menu
-  loop do
-    show_menu
-
-    process(gets.chomp) 
-    
-    
+def try_load_students
+  filename = ARGV.first #first argument from command line
+  return if filename.nil? #get out of method if filename isn't given
+  if File.exists?(filename) #if it exists
+    load_students(filename)
+    puts "Loaded #{@students.count} from #{filename}"
+  else #if it doesn't exist
+    "Sorry #{filename} doesn't exist"
+    exit #quit the program
   end
-end
+end 
 
+
+try_load_students
 interactive_menu

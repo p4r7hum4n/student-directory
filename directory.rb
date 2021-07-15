@@ -1,53 +1,74 @@
-#put all students into an array
-students = [
-  {name: "Dr. Hannibal Lecter", cohort: :november},
-  {name: "Darth Vader", cohort: :november},
-  {name: "Nurse Ratched", cohort: :november},
-  {name: "Michael Corleone", cohort: :november},
-  {name: "Alex DeLarge", cohort: :november},
-  {name: "The Wicked Witch of the West", cohort: :november},
-  {name: "Terminator", cohort: :november},
-  {name: "Freddy Krueger", cohort: :november},
-  {name: "The Joker", cohort: :november},
-  {name: "Joffrey Baratheon", cohort: :november},
-  {name: "Norman Bates", cohort: :november}
-]
+@students = []# an empty array accessible to all methods
 
 def input_students
   puts "Enter student name(s)"
   puts "Hit enter twice to finish"
-  #create empty array
-  students = []
   #get first name
   name = gets.chomp
   #while name is not empty - repeat the code
   while !name.empty? do
     #add student hash to array
-    students << {name: name, cohort: :november}
-    puts "Current student count is: #{students.count}"
+    @students << {name: name, cohort: :november}
+    puts "Current student count is: #{@students.count}"
     #get another name
     name = gets.chomp
   end
-  students
+  @students
 end
 
 def print_header
-  "The students of Villains Academy"
-  "-------------"
+  puts "The students of Villains Academy"
+  puts "-------------"
 end
 
-def print(names)
-  names.each {
-  |name|
-  puts "#{name[:name]} (#{name[:cohort]} cohort)"
+def print
+  @students.each_with_index {
+  |name, index|
+  puts "#{index}: #{name[:name]} (#{name[:cohort]} cohort)"
 }
 end
 
-def print_footer(names)
-  puts "Overall we have #{names.count} great students"
+def print_footer
+  puts "Overall we have #{@students.count} great students"
+  puts "-------------"
 end
 
-students = input_students
-print_header
-print(students)
-print_footer(students)
+
+def show_menu
+  puts "1. Input the students"
+  puts "2. Show the students"
+  puts "9. Exit"
+end
+
+def show_students
+  print_header
+  print
+  print_footer
+end
+
+def process(selection)
+  case selection
+  when "1"
+    students = input_students
+  when "2"
+    show_students
+  when "9"
+    exit
+  else 
+    puts "Please enter a valid option"
+  end
+end
+
+
+
+def interactive_menu
+  loop do
+    show_menu
+
+    process(gets.chomp) 
+    
+    
+  end
+end
+
+interactive_menu
